@@ -1,0 +1,11 @@
+{
+  "name": "node-menu",
+  "description": "Allows to build command line menues",
+  "version": "0.0.1",
+  "author": {
+    "email": "boris.nebosenko@gmail.com"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  }
+}
