@@ -1,11 +1,18 @@
 {
   "name": "node-menu",
-  "description": "Allows to build command line menues",
-  "version": "0.0.3",
-  "author": {
-    "email": "boris.nebosenko@gmail.com"
-  },
+  "description": "Allows to create command line menues for REPL applications",
+  "version": "0.0.4",
+  "author": "Borys Nebosenko <borys.nebosenko@gmail.com>",
+  "keywords": [
+  	"menu", 
+  	"shell", 
+  	"repl",
+  	"console",
+  	"terminal"
+  ],
+  "repository": "git://github.com/nbu/node-menu",
   "engines": {
     "node": ">= 0.10.0"
-  }
+  },
+  "license": "MIT"
 }
