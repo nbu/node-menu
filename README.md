@@ -100,7 +100,7 @@ var menu = require('node-menu');
 Add item to the menu. 
 
 - _title_ - title of the menu item;
-- _funct_ - item handler function;
+- _handler_ - item handler function;
 - _owner_ - owner object of the function (this);
 - _args_ - array of argument names being passed to the function;
 
