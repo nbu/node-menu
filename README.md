@@ -7,15 +7,54 @@ This module allows to create console menu for your REPL application. It allows y
 
     npm install node-menu
 
-## Usage
+## Methods
+
+```javascript
+var menu = require('node-menu');
+```
+
+### menu.addItem(title, handler, owner, args)
+
+Add item to the menu. 
+
+- _title_ - title of the menu item;
+- _handler_ - item handler function;
+- _owner_ - owner object of the function (this);
+- _args_ - array of objects argument names being passed to the function, argument is an object with two fields: 'name' and 'type'. Available types are: 'numeric', 'bool' and 'string';
+
+```javascript
+menu.addItem(
+    'Menu Item', 
+    function(str, bool, num1, num2) {
+        console.log('String: ' + str);
+        if (bool) {
+            console.log('bool is true');
+        }
+        var sum = num1 + num2;
+        console.log('num1 + num2: ' + sum);
+    },
+    null,
+    [
+        {'name': 'Str Arg', 'type': 'string'}, 
+        {'name': 'Bool Arg', 'type': 'bool'}, 
+        {'name': 'num1', 'type': 'numeric'},
+        {'name': 'num2', 'type': 'numeric'}
+    ]);
+```
+
+### menu.start()
+
+Start menu.
+
+## Example
 
 ```javascript
 var menu = require('node-menu');
 
 var TestObject = function() {
     var self = this;
-    self.fieldA = "FieldA";
-    self.fieldB = "FieldB";
+    self.fieldA = 'FieldA';
+    self.fieldB = 'FieldB';
 }
 
 TestObject.prototype.printFieldA = function() {
@@ -29,9 +68,9 @@ TestObject.prototype.printFieldB = function(arg) {
 var testObject = new TestObject();
 
 menu.addItem(
-    "No parameters", 
+    'No parameters', 
     function() {
-        console.log("No parameters is invoked");
+        console.log('No parameters is invoked');
     });
 
 menu.addItem(
@@ -40,28 +79,28 @@ menu.addItem(
     testObject);
 
 menu.addItem(
-    "Print Field B concatenated with arg1",
+    'Print Field B concatenated with arg1',
     testObject.printFieldB,
     testObject,
-    ["arg1"]);
+    [{'name': 'arg1', 'type': 'string'}]);
 
 menu.addItem(
-    "Sum", 
+    'Sum', 
     function(op1, op2) {
         var sum = op1 + op2;
-        console.log("Sum " + op1 + "+" + op2 + "=" + sum);
+        console.log('Sum ' + op1 + '+' + op2 + '=' + sum);
     },
     null, 
-    ["op1", "op2"]);
+    [{'name': 'op1', 'type': 'numeric'}, {'name': 'op2', 'type': 'numeric'}]);
 
 menu.addItem(
-    "String and Bool parameters", 
+    'String and Bool parameters', 
     function(str, b) {
         console.log("String is: " + str);
         console.log("Bool is: " + b);
     },
     null,
-    ["str", "bool"]);
+    [{'name': 'str', 'type': 'string'}, {'name': 'bool', 'type': 'bool'}]);
 
 
 menu.start();
@@ -88,24 +127,5 @@ Output of this example:
     >> 
 
 To invoke item without arguments just type number and Enter. To invoke item with arguments, type number then arguments delimited with space. If string argument has spaces it must be double quoted.
-
-## Methods
-
-```javascript
-var menu = require('node-menu');
-```
-
-### menu.addItem(title, handler, owner, args)
-
-Add item to the menu. 
-
-- _title_ - title of the menu item;
-- _handler_ - item handler function;
-- _owner_ - owner object of the function (this);
-- _args_ - array of argument names being passed to the function;
-
-### menu.start()
-
-Start menu.
 
 ## To be continued...
