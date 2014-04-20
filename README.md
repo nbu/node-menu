@@ -1,7 +1,7 @@
 node-menu
 =========
 
-This module allows to create cosole menue for your REPL application. It allows you to register menu items with their handlers. Optionally you may provide set of arguments being passed to handler.
+This module allows to create console menu for your REPL application. It allows you to register menu items with their handlers. Optionally you may provide handler's owner object and list of arguments being passed to handler.
 
 ## Installation
 
@@ -40,7 +40,7 @@ menu.addItem(
     testObject);
 
 menu.addItem(
-    "Print Field B concateneted with arg1",
+    "Print Field B concatenated with arg1",
     testObject.printFieldB,
     testObject,
     ["arg1"]);
@@ -73,20 +73,39 @@ Output of this example:
        / | / /____   ____/ /___   /  |/  /___   ____   __  __
       /  |/ // __ \ / __  // _ \ / /|_/ // _ \ / __ \ / / / /
      / /|  // /_/ // /_/ //  __// /  / //  __// / / // /_/ /
-    /_/ |_/ \____/ \__,_/ \___//_/  /_/ \___//_/ /_/ \__,_/  v.0.0.5
+    /_/ |_/ \____/ \__,_/ \___//_/  /_/ \___//_/ /_/ \__,_/  v.0.0.6
     
     
     1. No parameters
     2. Print Field A
-    3. Print Field B concateneted with arg1: "arg1"
+    3. Print Field B concatenated with arg1: "arg1"
     4. Sum: "op1" "op2"
     5. String and Bool parameters: "str" "bool"
     6. Quit
     
-    Please provide input at promt as: >> ItemNumber arg1, arg2 ... (i.e. >> 2 "some string", 2, 4, true)
+    Please provide input at prompt as: >> ItemNumber arg1 arg2 ... (i.e. >> 2 "string with spaces" 2 4 noSpacesString true)
       
     >> 
 
-To invoke item without arguments just type number and Enter. To invoke item with arguments, type number comma delimitered arguments after space. String arguments must be double quoted.
+To invoke item without arguments just type number and Enter. To invoke item with arguments, type number then arguments delimited with space. If string argument has spaces it must be double quoted.
+
+## Methods
+
+```javascript
+var menu = require('node-menu');
+```
+
+### menu.addItem(title, funct, owner, args)
+
+Add item to the menu. 
+
+- _title_ - title of the menu item;
+- _funct_ - item handler function;
+- _owner_ - owner object of the function (this);
+- _args_ - array of argument names being passed to the function;
+
+### menu.start()
+
+Start menu.
 
 ## To be continued...
