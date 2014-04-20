@@ -95,7 +95,7 @@ To invoke item without arguments just type number and Enter. To invoke item with
 var menu = require('node-menu');
 ```
 
-### menu.addItem(title, funct, owner, args)
+### menu.addItem(title, handler, owner, args)
 
 Add item to the menu. 
 
