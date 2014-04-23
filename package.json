@@ -1,7 +1,7 @@
 {
   "name": "node-menu",
   "description": "Allows to create command line menu for REPL applications",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "author": "Borys Nebosenko <borys.nebosenko@gmail.com>",
   "keywords": [
   	"menu", 

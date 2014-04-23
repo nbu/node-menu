@@ -29,6 +29,8 @@ menu.addItem(
         console.log('String: ' + str);
         if (bool) {
             console.log('bool is true');
+        } else {
+            console.log('bool is false');
         }
         var sum = num1 + num2;
         console.log('num1 + num2: ' + sum);
@@ -42,11 +44,33 @@ menu.addItem(
     ]);
 ```
 
+### menu.addDelimiter(delimiter, cnt, title)
+
+Adds delimiter to the menu.
+
+- _delimiter_ - delimiter character;
+- _cnt_ - delimiter's repetition count; 
+- _title_ - title of the delimiter, will be printed in the middle of the delimiter line;
+
+The output of the delimiter:
+
+    menu.addDelimiter('-', 33, 'Main Menu')
+    ------------Main Menu------------
+    
+    menu.addDelimiter('*', 33)
+    *********************************
+
 ### menu.start()
 
 Start menu.
 
 ## Example
+
+## Live Example
+
+<a href="http://runnable.com/U1H42Un5ZlsFdb2x/console-menu-for-your-cool-repl-application-for-shell-and-cli" target="_blank"><img src="https://runnable.com/external/styles/assets/runnablebtn.png" style="width:67px;height:25px;"></a>
+
+## Source
 
 ```javascript
 var menu = require('node-menu');
@@ -66,6 +90,8 @@ TestObject.prototype.printFieldB = function(arg) {
 }
 
 var testObject = new TestObject();
+
+menu.addDelimiter('-', 40, 'Main Menu');
 
 menu.addItem(
     'No parameters', 
@@ -102,6 +128,7 @@ menu.addItem(
     null,
     [{'name': 'str', 'type': 'string'}, {'name': 'bool', 'type': 'bool'}]);
 
+menu.addDelimiter('*', 40);
 
 menu.start();
 ```
@@ -112,14 +139,15 @@ Output of this example:
        / | / /____   ____/ /___   /  |/  /___   ____   __  __
       /  |/ // __ \ / __  // _ \ / /|_/ // _ \ / __ \ / / / /
      / /|  // /_/ // /_/ //  __// /  / //  __// / / // /_/ /
-    /_/ |_/ \____/ \__,_/ \___//_/  /_/ \___//_/ /_/ \__,_/  v.0.0.7
+    /_/ |_/ \____/ \__,_/ \___//_/  /_/ \___//_/ /_/ \__,_/  v.0.0.8
     
-    
+    ---------------Main Menu---------------
     1. No parameters
     2. Print Field A
     3. Print Field B concatenated with arg1: "arg1"
     4. Sum: "op1" "op2"
     5. String and Bool parameters: "str" "bool"
+    ***************************************
     6. Quit
     
     Please provide input at prompt as: >> ItemNumber arg1 arg2 ... (i.e. >> 2 "string with spaces" 2 4 noSpacesString true)
