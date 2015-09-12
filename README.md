@@ -13,9 +13,11 @@ This module allows to create console menu for your REPL application. It allows y
 var menu = require('node-menu');
 ```
 
+Each method returns reference on self object, so calls could be chained.
+
 ### menu.addItem(title, handler, owner, args)
 
-Add item to the menu. 
+Add item to the menu. Returns __menu__ for chaining calls.
 
 - _title_ - title of the menu item;
 - _handler_ - item handler function;
@@ -46,7 +48,7 @@ menu.addItem(
 
 ### menu.addDelimiter(delimiter, cnt, title)
 
-Adds delimiter to the menu.
+Adds delimiter to the menu. Returns __menu__ for chaining calls.
 
 - _delimiter_ - delimiter character;
 - _cnt_ - delimiter's repetition count; 
@@ -60,6 +62,32 @@ The output of the delimiter:
     menu.addDelimiter('*', 33)
     *********************************
 
+### menu.enableDefaultHeader()
+
+Turns on default header (turned on by default). Returns __menu__ for chaining calls.
+
+```javascript
+menu.enableDefaultHeader()
+```
+
+### menu.disableDefaultHeader()
+
+Turns off default header. No header will be printed in this case. Returns __menu__ for chaining calls.
+
+```javascript
+menu.disableDefaultHeader()
+```
+
+### menu.customHeader(customHeaderFunc)
+
+Turns off default header and prints custom header passed in __customHeaderFunc__. Returns __menu__ for chaining calls.
+
+```javascript
+menu.customHeader(function() {
+    process.stdout.write("Custom header\n");
+})
+```
+
 ### menu.start()
 
 Start menu.
@@ -68,7 +96,7 @@ Start menu.
 
 ## Live Example
 
-<a href="http://runnable.com/U1H42Un5ZlsFdb2x/console-menu-for-your-cool-repl-application-for-shell-and-cli" target="_blank"><img src="https://runnable.com/external/styles/assets/runnablebtn.png" style="width:67px;height:25px;"></a>
+<a href="http://runnable.com/U1H42Un5ZlsFdb2x/console-menu-for-your-cool-repl-application-for-shell-and-cli" target="_blank"><img src="https://code.runnable.com/external/styles/assets/runnablebtn.png" style="width:67px;height:25px;"></a>
 
 ## Source
 
@@ -91,46 +119,43 @@ TestObject.prototype.printFieldB = function(arg) {
 
 var testObject = new TestObject();
 
-menu.addDelimiter('-', 40, 'Main Menu');
-
-menu.addItem(
-    'No parameters', 
-    function() {
-        console.log('No parameters is invoked');
-    });
-
-menu.addItem(
-    "Print Field A",
-    testObject.printFieldA,
-    testObject);
-
-menu.addItem(
-    'Print Field B concatenated with arg1',
-    testObject.printFieldB,
-    testObject,
-    [{'name': 'arg1', 'type': 'string'}]);
-
-menu.addItem(
-    'Sum', 
-    function(op1, op2) {
-        var sum = op1 + op2;
-        console.log('Sum ' + op1 + '+' + op2 + '=' + sum);
-    },
-    null, 
-    [{'name': 'op1', 'type': 'numeric'}, {'name': 'op2', 'type': 'numeric'}]);
-
-menu.addItem(
-    'String and Bool parameters', 
-    function(str, b) {
-        console.log("String is: " + str);
-        console.log("Bool is: " + b);
-    },
-    null,
-    [{'name': 'str', 'type': 'string'}, {'name': 'bool', 'type': 'bool'}]);
-
-menu.addDelimiter('*', 40);
-
-menu.start();
+menu.addDelimiter('-', 40, 'Main Menu')
+    .addItem(
+        'No parameters', 
+        function() {
+            console.log('No parameters is invoked');
+        })
+    .addItem(
+        "Print Field A",
+        testObject.printFieldA,
+        testObject)
+    .addItem(
+        'Print Field B concatenated with arg1',
+        testObject.printFieldB,
+        testObject,
+        [{'name': 'arg1', 'type': 'string'}])
+    .addItem(
+        'Sum', 
+        function(op1, op2) {
+            var sum = op1 + op2;
+            console.log('Sum ' + op1 + '+' + op2 + '=' + sum);
+        },
+        null, 
+        [{'name': 'op1', 'type': 'numeric'}, {'name': 'op2', 'type': 'numeric'}])
+    .addItem(
+        'String and Bool parameters', 
+        function(str, b) {
+            console.log("String is: " + str);
+            console.log("Bool is: " + b);
+        },
+        null,
+        [{'name': 'str', 'type': 'string'}, {'name': 'bool', 'type': 'bool'}])
+    .addDelimiter('*', 40)
+    // .customHeader(function() {
+    //     process.stdout.write("Hello\n");
+    // })
+    // .disableDefaultHeader()
+    .start();
 ```
 
 Output of this example:
@@ -139,7 +164,7 @@ Output of this example:
        / | / /____   ____/ /___   /  |/  /___   ____   __  __
       /  |/ // __ \ / __  // _ \ / /|_/ // _ \ / __ \ / / / /
      / /|  // /_/ // /_/ //  __// /  / //  __// / / // /_/ /
-    /_/ |_/ \____/ \__,_/ \___//_/  /_/ \___//_/ /_/ \__,_/  v.0.0.8
+    /_/ |_/ \____/ \__,_/ \___//_/  /_/ \___//_/ /_/ \__,_/  v.0.0.9
     
     ---------------Main Menu---------------
     1. No parameters
@@ -155,5 +180,3 @@ Output of this example:
     >> 
 
 To invoke item without arguments just type number and Enter. To invoke item with arguments, type number then arguments delimited with space. If string argument has spaces it must be double quoted.
-
-## To be continued...
