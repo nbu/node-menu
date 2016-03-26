@@ -26,7 +26,7 @@ Add item to the menu. Returns __menu__ for chaining calls.
 
 ```javascript
 menu.addItem(
-    'Menu Item', 
+    'Menu Item',
     function(str, bool, num1, num2) {
         console.log('String: ' + str);
         if (bool) {
@@ -39,8 +39,8 @@ menu.addItem(
     },
     null,
     [
-        {'name': 'Str Arg', 'type': 'string'}, 
-        {'name': 'Bool Arg', 'type': 'bool'}, 
+        {'name': 'Str Arg', 'type': 'string'},
+        {'name': 'Bool Arg', 'type': 'bool'},
         {'name': 'num1', 'type': 'numeric'},
         {'name': 'num2', 'type': 'numeric'}
     ]);
@@ -51,14 +51,14 @@ menu.addItem(
 Adds delimiter to the menu. Returns __menu__ for chaining calls.
 
 - _delimiter_ - delimiter character;
-- _cnt_ - delimiter's repetition count; 
+- _cnt_ - delimiter's repetition count;
 - _title_ - title of the delimiter, will be printed in the middle of the delimiter line;
 
 The output of the delimiter:
 
     menu.addDelimiter('-', 33, 'Main Menu')
     ------------Main Menu------------
-    
+
     menu.addDelimiter('*', 33)
     *********************************
 
@@ -84,7 +84,33 @@ Turns off default header and prints custom header passed in __customHeaderFunc__
 
 ```javascript
 menu.customHeader(function() {
-    process.stdout.write("Custom header\n");
+    process.stdout.write("\nCustom header\n");
+})
+```
+
+### menu.enableDefaultPrompt()
+
+Turns on default prompt (turned on by default). Returns __menu__ for chaining calls.
+
+```javascript
+menu.enableDefaultPrompt()
+```
+
+### menu.disableDefaultPrompt()
+
+Turns off default prompt. No prompt will be printed in this case. Returns __menu__ for chaining calls.
+
+```javascript
+menu.disableDefaultPrompt()
+```
+
+### menu.customPrompt(customPromptFunc)
+
+Turns off default prompt and prints custom header passed in __customPromptFunc__. Returns __menu__ for chaining calls.
+
+```javascript
+menu.customPrompt(function() {
+    process.stdout.write("Custom prompt\n");
 })
 ```
 
@@ -121,7 +147,7 @@ var testObject = new TestObject();
 
 menu.addDelimiter('-', 40, 'Main Menu')
     .addItem(
-        'No parameters', 
+        'No parameters',
         function() {
             console.log('No parameters is invoked');
         })
@@ -135,15 +161,15 @@ menu.addDelimiter('-', 40, 'Main Menu')
         testObject,
         [{'name': 'arg1', 'type': 'string'}])
     .addItem(
-        'Sum', 
+        'Sum',
         function(op1, op2) {
             var sum = op1 + op2;
             console.log('Sum ' + op1 + '+' + op2 + '=' + sum);
         },
-        null, 
+        null,
         [{'name': 'op1', 'type': 'numeric'}, {'name': 'op2', 'type': 'numeric'}])
     .addItem(
-        'String and Bool parameters', 
+        'String and Bool parameters',
         function(str, b) {
             console.log("String is: " + str);
             console.log("Bool is: " + b);
@@ -155,6 +181,10 @@ menu.addDelimiter('-', 40, 'Main Menu')
     //     process.stdout.write("Hello\n");
     // })
     // .disableDefaultHeader()
+    // .customPrompt(function() {
+    //     process.stdout.write("\nEnter your selection:\n");
+    // })
+    // .disableDefaultPrompt()
     .start();
 ```
 
@@ -165,7 +195,7 @@ Output of this example:
       /  |/ // __ \ / __  // _ \ / /|_/ // _ \ / __ \ / / / /
      / /|  // /_/ // /_/ //  __// /  / //  __// / / // /_/ /
     /_/ |_/ \____/ \__,_/ \___//_/  /_/ \___//_/ /_/ \__,_/  v.1.0.0
-    
+
     ---------------Main Menu---------------
     1. No parameters
     2. Print Field A
@@ -174,9 +204,9 @@ Output of this example:
     5. String and Bool parameters: "str" "bool"
     ***************************************
     6. Quit
-    
+
     Please provide input at prompt as: >> ItemNumber arg1 arg2 ... (i.e. >> 2 "string with spaces" 2 4 noSpacesString true)
-      
-    >> 
+
+    >>
 
 To invoke item without arguments just type number and Enter. To invoke item with arguments, type number then arguments delimited with space. If string argument has spaces it must be double quoted.
