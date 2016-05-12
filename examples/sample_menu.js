@@ -4,21 +4,21 @@ var TestObject = function() {
     var self = this;
     self.fieldA = 'FieldA';
     self.fieldB = 'FieldB';
-}
+};
 
 TestObject.prototype.printFieldA = function() {
     console.log(this.fieldA);
-}
+};
 
 TestObject.prototype.printFieldB = function(arg) {
     console.log(this.fieldB + arg);
-}
+};
 
 var testObject = new TestObject();
 
 menu.addDelimiter('-', 40, 'Main Menu')
     .addItem(
-        'No parameters', 
+        'No parameters',
         function() {
             console.log('No parameters is invoked');
         })
@@ -32,15 +32,15 @@ menu.addDelimiter('-', 40, 'Main Menu')
         testObject,
         [{'name': 'arg1', 'type': 'string'}])
     .addItem(
-        'Sum', 
+        'Sum',
         function(op1, op2) {
             var sum = op1 + op2;
             console.log('Sum ' + op1 + '+' + op2 + '=' + sum);
         },
-        null, 
+        null,
         [{'name': 'op1', 'type': 'numeric'}, {'name': 'op2', 'type': 'numeric'}])
     .addItem(
-        'String and Bool parameters', 
+        'String and Bool parameters',
         function(str, b) {
             console.log("String is: " + str);
             console.log("Bool is: " + b);
@@ -52,4 +52,8 @@ menu.addDelimiter('-', 40, 'Main Menu')
     //     process.stdout.write("Hello\n");
     // })
     // .disableDefaultHeader()
+    // .customPrompt(function() {
+    //     process.stdout.write("\nEnter your selection:\n");
+    // })
+    // .disableDefaultPrompt()
     .start();
