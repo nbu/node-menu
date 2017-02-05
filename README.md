@@ -114,6 +114,14 @@ menu.customPrompt(function() {
 })
 ```
 
+### menu.resetMenu()
+
+Clears all data and listeners from the menu object so the object can be updated and reused.
+
+```javascript
+menu.resetMenu()
+```
+
 ### menu.start()
 
 Start menu.
