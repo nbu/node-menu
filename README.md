@@ -120,7 +120,7 @@ Clears all data and listeners from the menu object so the object can be updated 
 
 ### menu.continueCallback(continueCallback)
 
-Set callback which must be invoked when "Enter" button pressed to continue.
+Set callback which must be invoked when __"Enter"__ button pressed to continue.
 
 ```javascript
 menu.resetMenu()
