@@ -118,6 +118,10 @@ menu.customPrompt(function() {
 
 Clears all data and listeners from the menu object so the object can be updated and reused.
 
+### menu.continueCallback(continueCallback)
+
+Set callback which must be invoked when "Enter" button pressed to continue.
+
 ```javascript
 menu.resetMenu()
 ```

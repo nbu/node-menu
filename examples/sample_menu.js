@@ -15,6 +15,7 @@ TestObject.prototype.printFieldB = function(arg) {
 };
 
 var testObject = new TestObject();
+var timeout;
 
 menu.addDelimiter('-', 40, 'Main Menu')
     .addItem(
@@ -47,7 +48,25 @@ menu.addDelimiter('-', 40, 'Main Menu')
         },
         null,
         [{'name': 'str', 'type': 'string'}, {'name': 'bool', 'type': 'bool'}])
+    .addItem(
+        'Long lasting task which is terminated when Enter pressed',
+        function(time) {
+            console.log("Starting long lasting job for " + time + " sec");
+            timeout = setTimeout(function() {
+                console.log("Long lasting job is done");
+                timeout = undefined;
+            }, time * 1000);
+        },
+        null,
+        [{'name': 'Job execution time, sec', 'type': 'numeric'}])
     .addDelimiter('*', 40)
+    .continueCallback(function () {
+        if (timeout) {
+            clearTimeout(timeout);
+            console.log("Timeout cleaned");
+            timeout = undefined;
+        }
+    })
     // .customHeader(function() {
     //     process.stdout.write("Hello\n");
     // })
