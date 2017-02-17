@@ -241,3 +241,9 @@ Output of this example:
     >>
 
 To invoke item without arguments just type number and Enter. To invoke item with arguments, type number then arguments delimited with space. If string argument has spaces it must be double quoted.
+
+# Additional links
+
+Similar library for other languages:
+- [Java](https://github.com/nbu/java-menu)
+- [C#](https://github.com/nbu/charp-menu)
