@@ -1,18 +1,18 @@
 {
   "name": "node-menu",
   "description": "Allows to create command line menu for REPL applications",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "author": "Borys Nebosenko <borys.nebosenko@gmail.com>",
   "keywords": [
-  	"menu", 
-  	"shell", 
-  	"repl",
-  	"console",
-  	"terminal"
+    "menu",
+    "shell",
+    "repl",
+    "console",
+    "terminal"
   ],
   "repository": "git://github.com/nbu/node-menu",
   "dependencies": {
-  	"underscore": "1.6.0"
+    "underscore": "1.13.1"
   },
   "engines": {
     "node": ">= 0.10.0"
