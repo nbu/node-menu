@@ -1,0 +1,5 @@
+[tools]
+node = "24.18.1"
+
+[settings]
+lockfile = true
