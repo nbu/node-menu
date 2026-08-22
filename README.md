@@ -108,13 +108,13 @@ menu
 Sample session from `examples/admin-jobs.js` (abridged):
 
 ```text
----------------Browse----------------
+----------------Browse-----------------
 1. List jobs
 2. Get job by id: "id"
----------------Mutate----------------
+----------------Mutate-----------------
 3. Enqueue job: "name" "priority"
 4. Cancel job: "id"
----------------System----------------
+----------------System-----------------
 5. Stats
 6. Quit
 
@@ -145,7 +145,7 @@ Invoke an item with no arguments by typing its number. For arguments, type the n
 var menu = require('node-menu');
 ```
 
-Each method returns the menu object for chaining.
+Chaining methods (`addItem`, `addDelimiter`, `customHeader`, and so on) return the menu object. `start()` starts the menu and does not return a value for chaining.
 
 ### menu.addItem(title, handler, owner, args)
 
