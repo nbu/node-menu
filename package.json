@@ -26,6 +26,6 @@
   },
   "license": "MIT",
   "scripts": {
-    "test": "node test/history.test.js"
+    "test": "node test/history.test.js && node test/nodemenu.test.js"
   }
 }

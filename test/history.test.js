@@ -77,6 +77,11 @@ h.recordPersisted('boom');
 h.removePersisted('boom');
 assert.strictEqual(h.getPersisted().indexOf('boom'), -1);
 
+// replacePersisted restores an exact snapshot and saves it
+h.replacePersisted(['1 ok', '3 ok', '4 ok']);
+assert.deepStrictEqual(h.getPersisted(), ['1 ok', '3 ok', '4 ok']);
+assert.strictEqual(fs.readFileSync(historyPath, 'utf8'), '1 ok\n3 ok\n4 ok\n');
+
 // clearSession
 h.clearSession();
 assert.deepStrictEqual(h.getSession(), []);
