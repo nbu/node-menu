@@ -1,14 +1,14 @@
 {
   "name": "node-menu",
   "description": "Allows to create command line menu for REPL applications",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "author": "Borys Nebosenko <borys.nebosenko@gmail.com>",
   "keywords": [
-  	"menu", 
-  	"shell", 
-  	"repl",
-  	"console",
-  	"terminal"
+    "menu",
+    "shell",
+    "repl",
+    "console",
+    "terminal"
   ],
   "repository": {
     "type": "git",
