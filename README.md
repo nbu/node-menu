@@ -123,7 +123,9 @@ Clears all data and listeners from the menu object so the object can be updated 
 Set callback which must be invoked when __"Enter"__ button pressed to continue.
 
 ```javascript
-menu.resetMenu()
+menu.continueCallback(function () {
+    console.log('Continuing...');
+})
 ```
 
 ### menu.start()
@@ -225,7 +227,7 @@ Output of this example:
        / | / /____   ____/ /___   /  |/  /___   ____   __  __
       /  |/ // __ \ / __  // _ \ / /|_/ // _ \ / __ \ / / / /
      / /|  // /_/ // /_/ //  __// /  / //  __// / / // /_/ /
-    /_/ |_/ \____/ \__,_/ \___//_/  /_/ \___//_/ /_/ \__,_/  v.1.0.0
+    /_/ |_/ \____/ \__,_/ \___//_/  /_/ \___//_/ /_/ \__,_/  v.1.3.5
 
     ---------------Main Menu---------------
     1. No parameters
