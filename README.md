@@ -138,6 +138,7 @@ Invoke an item with no arguments by typing its number. For arguments, type the n
 | `examples/admin-jobs.js` | In-memory job store: list, get, enqueue, cancel, stats (`owner` + typed args) |
 | `examples/custom-chrome.js` | `customHeader` and `customPrompt` |
 | `examples/cancel-job.js` | Long-running work cancelled via `continueCallback` when Enter is pressed |
+| `examples/history-persist.js` | Optional command history persistence (`configureHistory`) |
 
 ## Methods
 
@@ -227,6 +228,26 @@ Set a callback invoked when Enter is pressed on the “Press Enter to continue�
 ```javascript
 menu.continueCallback(function() {
     console.log('Continuing...');
+});
+```
+
+### menu.configureHistory(options)
+
+Configure in-session command history and optional persistence across restarts. In-session history is always on: every non-empty `>>` line is recorded for up/down recall, with whole-list dedupe (most recent wins) and a default cap of 100 entries (`sessionMaxEntries`).
+
+Persistence is off by default. When `persist: true`, only validated handler runs that complete without throwing are saved. The default file path is `~/.node-menu_history`; the persisted list defaults to 100 entries (`maxEntries`).
+
+- _sessionMaxEntries_ — max in-session history entries; default 100
+- _persist_ — save successful commands to disk; default false
+- _path_ — history file path when persisting; default `~/.node-menu_history`
+- _maxEntries_ — max persisted entries; default 100
+
+```javascript
+menu.configureHistory({
+    sessionMaxEntries: 100,
+    persist: true,
+    path: '/tmp/my-menu-history',
+    maxEntries: 100
 });
 ```
 
