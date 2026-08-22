@@ -1,11 +1,143 @@
 node-menu
 =========
 
-This module allows to create console menu for your REPL application. It allows you to register menu items with their handlers. Optionally you may provide handler's owner object and list of arguments being passed to handler.
+Create interactive console menus for REPL-style and ops Node.js apps. Register menu items with handlers, optional `this` owners, and typed arguments (`string`, `numeric`, `bool`).
 
 ## Installation
 
-    npm install node-menu
+```bash
+npm install node-menu
+```
+
+## Quickstart — Background jobs console
+
+Run the full example:
+
+```bash
+node examples/admin-jobs.js
+```
+
+A trimmed version of the same idea (full store + get-by-id live in `examples/admin-jobs.js`):
+
+```javascript
+var menu = require('node-menu');
+
+function JobStore() {
+    this._nextId = 1;
+    this._jobs = [];
+}
+
+JobStore.prototype.listJobs = function() {
+    this._jobs.forEach(function(job) {
+        console.log('#' + job.id + ' ' + job.name + ' [' + job.status + ']');
+    });
+};
+
+JobStore.prototype.enqueue = function(name, priority) {
+    var job = {
+        id: this._nextId++,
+        name: name,
+        priority: priority,
+        status: 'queued'
+    };
+    this._jobs.push(job);
+    console.log('Enqueued job #' + job.id);
+};
+
+JobStore.prototype.cancel = function(id) {
+    var job = null;
+    for (var i = 0; i < this._jobs.length; i++) {
+        if (this._jobs[i].id === id) {
+            job = this._jobs[i];
+            break;
+        }
+    }
+    if (!job) {
+        console.log('Job not found: ' + id);
+        return;
+    }
+    if (job.status === 'done' || job.status === 'cancelled') {
+        console.log('Cannot cancel job #' + id + ' (status=' + job.status + ')');
+        return;
+    }
+    job.status = 'cancelled';
+    console.log('Cancelled job #' + id);
+};
+
+JobStore.prototype.stats = function() {
+    var counts = { queued: 0, running: 0, done: 0, cancelled: 0 };
+    this._jobs.forEach(function(job) {
+        if (counts[job.status] !== undefined) {
+            counts[job.status]++;
+        }
+    });
+    console.log(
+        'queued=' + counts.queued +
+        ' running=' + counts.running +
+        ' done=' + counts.done +
+        ' cancelled=' + counts.cancelled
+    );
+};
+
+var store = new JobStore();
+
+menu
+    .addDelimiter('-', 40, 'Browse')
+    .addItem('List jobs', store.listJobs, store)
+    .addDelimiter('-', 40, 'Mutate')
+    .addItem(
+        'Enqueue job',
+        store.enqueue,
+        store,
+        [
+            { name: 'name', type: 'string' },
+            { name: 'priority', type: 'numeric' }
+        ]
+    )
+    .addItem(
+        'Cancel job',
+        store.cancel,
+        store,
+        [{ name: 'id', type: 'numeric' }]
+    )
+    .addDelimiter('-', 40, 'System')
+    .addItem('Stats', store.stats, store)
+    .start();
+```
+
+Sample session from `examples/admin-jobs.js` (abridged):
+
+```text
+---------------Browse----------------
+1. List jobs
+2. Get job by id: "id"
+---------------Mutate----------------
+3. Enqueue job: "name" "priority"
+4. Cancel job: "id"
+---------------System----------------
+5. Stats
+6. Quit
+
+>> 3 "resize-images" 8
+Enqueued job #4 "resize-images"
+Press Enter to continue...
+
+>> 1
+#1  reindex-search  priority=5  status=running
+#2  send-digest  priority=2  status=queued
+#3  purge-temp  priority=1  status=done
+#4  resize-images  priority=8  status=queued
+```
+
+Invoke an item with no arguments by typing its number. For arguments, type the number then values separated by spaces. Quote strings that contain spaces.
+
+## Examples
+
+| File | What it shows |
+|------|----------------|
+| `examples/admin-jobs.js` | In-memory job store: list, get, enqueue, cancel, stats (`owner` + typed args) |
+| `examples/custom-chrome.js` | `customHeader` and `customPrompt` |
+| `examples/cancel-job.js` | Long-running work cancelled via `continueCallback` when Enter is pressed |
 
 ## Methods
 
@@ -13,233 +145,91 @@ This module allows to create console menu for your REPL application. It allows y
 var menu = require('node-menu');
 ```
 
-Each method returns reference on self object, so calls could be chained.
+Each method returns the menu object for chaining.
 
 ### menu.addItem(title, handler, owner, args)
 
-Add item to the menu. Returns __menu__ for chaining calls.
+Add an item to the menu.
 
-- _title_ - title of the menu item;
-- _handler_ - item handler function;
-- _owner_ - owner object of the function (this);
-- _args_ - array of objects argument names being passed to the function, argument is an object with two fields: 'name' and 'type'. Available types are: 'numeric', 'bool' and 'string';
+- _title_ — title of the menu item
+- _handler_ — item handler function
+- _owner_ — owner object for the handler (`this`); optional
+- _args_ — array of `{ name, type }` argument descriptors. Types: `numeric`, `bool`, `string`
 
 ```javascript
 menu.addItem(
-    'Menu Item',
-    function(str, bool, num1, num2) {
-        console.log('String: ' + str);
-        if (bool) {
-            console.log('bool is true');
-        } else {
-            console.log('bool is false');
-        }
-        var sum = num1 + num2;
-        console.log('num1 + num2: ' + sum);
-    },
-    null,
+    'Enqueue job',
+    store.enqueue,
+    store,
     [
-        {'name': 'Str Arg', 'type': 'string'},
-        {'name': 'Bool Arg', 'type': 'bool'},
-        {'name': 'num1', 'type': 'numeric'},
-        {'name': 'num2', 'type': 'numeric'}
-    ]);
+        { name: 'name', type: 'string' },
+        { name: 'priority', type: 'numeric' }
+    ]
+);
 ```
 
 ### menu.addDelimiter(delimiter, cnt, title)
 
-Adds delimiter to the menu. Returns __menu__ for chaining calls.
+Add a delimiter line. _title_ is printed in the middle when provided.
 
-- _delimiter_ - delimiter character;
-- _cnt_ - delimiter's repetition count;
-- _title_ - title of the delimiter, will be printed in the middle of the delimiter line;
+```text
+menu.addDelimiter('-', 33, 'Main Menu')
+------------Main Menu------------
 
-The output of the delimiter:
-
-    menu.addDelimiter('-', 33, 'Main Menu')
-    ------------Main Menu------------
-
-    menu.addDelimiter('*', 33)
-    *********************************
+menu.addDelimiter('*', 33)
+*********************************
+```
 
 ### menu.enableDefaultHeader()
 
-Turns on default header (turned on by default). Returns __menu__ for chaining calls.
-
-```javascript
-menu.enableDefaultHeader()
-```
+Turn on the default header (on by default).
 
 ### menu.disableDefaultHeader()
 
-Turns off default header. No header will be printed in this case. Returns __menu__ for chaining calls.
-
-```javascript
-menu.disableDefaultHeader()
-```
+Turn off the default header.
 
 ### menu.customHeader(customHeaderFunc)
 
-Turns off default header and prints custom header passed in __customHeaderFunc__. Returns __menu__ for chaining calls.
+Turn off the default header and print a custom header via the callback.
 
 ```javascript
 menu.customHeader(function() {
-    process.stdout.write("\nCustom header\n");
-})
+    process.stdout.write('\nCustom header\n');
+});
 ```
 
 ### menu.enableDefaultPrompt()
 
-Turns on default prompt (turned on by default). Returns __menu__ for chaining calls.
-
-```javascript
-menu.enableDefaultPrompt()
-```
+Turn on the default prompt (on by default).
 
 ### menu.disableDefaultPrompt()
 
-Turns off default prompt. No prompt will be printed in this case. Returns __menu__ for chaining calls.
-
-```javascript
-menu.disableDefaultPrompt()
-```
+Turn off the default prompt.
 
 ### menu.customPrompt(customPromptFunc)
 
-Turns off default prompt and prints custom header passed in __customPromptFunc__. Returns __menu__ for chaining calls.
+Turn off the default prompt and print a custom prompt via the callback.
 
 ```javascript
 menu.customPrompt(function() {
-    process.stdout.write("Custom prompt\n");
-})
+    process.stdout.write('Select an action > ');
+});
 ```
 
 ### menu.resetMenu()
 
-Clears all data and listeners from the menu object so the object can be updated and reused.
+Clear menu data and listeners so the object can be rebuilt and reused.
 
 ### menu.continueCallback(continueCallback)
 
-Set callback which must be invoked when __"Enter"__ button pressed to continue.
+Set a callback invoked when Enter is pressed on the “Press Enter to continue…” step (useful to cancel in-flight work).
 
 ```javascript
-menu.continueCallback(function () {
+menu.continueCallback(function() {
     console.log('Continuing...');
-})
+});
 ```
 
 ### menu.start()
 
-Start menu.
-
-## Example
-
-## Live Example
-
-<a href="http://runnable.com/U1H42Un5ZlsFdb2x/console-menu-for-your-cool-repl-application-for-shell-and-cli" target="_blank"><img src="https://code.runnable.com/external/styles/assets/runnablebtn.png" style="width:67px;height:25px;"></a>
-
-## Source
-
-```javascript
-var menu = require('node-menu');
-
-var TestObject = function() {
-    var self = this;
-    self.fieldA = 'FieldA';
-    self.fieldB = 'FieldB';
-}
-
-TestObject.prototype.printFieldA = function() {
-    console.log(this.fieldA);
-}
-
-TestObject.prototype.printFieldB = function(arg) {
-    console.log(this.fieldB + arg);
-}
-
-var testObject = new TestObject();
-var timeout;
-
-menu.addDelimiter('-', 40, 'Main Menu')
-    .addItem(
-        'No parameters',
-        function() {
-            console.log('No parameters is invoked');
-        })
-    .addItem(
-        "Print Field A",
-        testObject.printFieldA,
-        testObject)
-    .addItem(
-        'Print Field B concatenated with arg1',
-        testObject.printFieldB,
-        testObject,
-        [{'name': 'arg1', 'type': 'string'}])
-    .addItem(
-        'Sum',
-        function(op1, op2) {
-            var sum = op1 + op2;
-            console.log('Sum ' + op1 + '+' + op2 + '=' + sum);
-        },
-        null,
-        [{'name': 'op1', 'type': 'numeric'}, {'name': 'op2', 'type': 'numeric'}])
-    .addItem(
-        'String and Bool parameters',
-        function(str, b) {
-            console.log("String is: " + str);
-            console.log("Bool is: " + b);
-        },
-        null,
-        [{'name': 'str', 'type': 'string'}, {'name': 'bool', 'type': 'bool'}])
-    .addItem(
-        'Long lasting task which is terminated when Enter pressed',
-        function(time) {
-            console.log("Starting long lasting job for " + time + " sec");
-            timeout = setTimeout(function() {
-                console.log("Long lasting job is done");
-                timeout = undefined;
-            }, time * 1000);
-        },
-        null,
-        [{'name': 'Job execution time, sec', 'type': 'numeric'}])
-    .addDelimiter('*', 40)
-    .continueCallback(function () {
-        if (timeout) {
-            clearTimeout(timeout);
-            console.log("Timeout cleaned");
-            timeout = undefined;
-        }
-    })
-    // .customHeader(function() {
-    //     process.stdout.write("Hello\n");
-    // })
-    // .disableDefaultHeader()
-    // .customPrompt(function() {
-    //     process.stdout.write("\nEnter your selection:\n");
-    // })
-    // .disableDefaultPrompt()
-    .start();
-```
-
-Output of this example:
-
-        _   __            __       __  ___
-       / | / /____   ____/ /___   /  |/  /___   ____   __  __
-      /  |/ // __ \ / __  // _ \ / /|_/ // _ \ / __ \ / / / /
-     / /|  // /_/ // /_/ //  __// /  / //  __// / / // /_/ /
-    /_/ |_/ \____/ \__,_/ \___//_/  /_/ \___//_/ /_/ \__,_/  v.1.3.5
-
-    ---------------Main Menu---------------
-    1. No parameters
-    2. Print Field A
-    3. Print Field B concatenated with arg1: "arg1"
-    4. Sum: "op1" "op2"
-    5. String and Bool parameters: "str" "bool"
-    ***************************************
-    6. Quit
-
-    Please provide input at prompt as: >> ItemNumber arg1 arg2 ... (i.e. >> 2 "string with spaces" 2 4 noSpacesString true)
-
-    >>
-
-To invoke item without arguments just type number and Enter. To invoke item with arguments, type number then arguments delimited with space. If string argument has spaces it must be double quoted.
+Start the menu (also registers a Quit item).
