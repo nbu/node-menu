@@ -14,10 +14,12 @@ function withStubbedMenu(run) {
     var originalLog = console.log;
     var originalWrite = process.stdout.write;
     var questions = [];
+    var prompts = [];
     var writes = '';
     var rl = {
         history: [],
         question: function(prompt, callback) {
+            prompts.push(prompt);
             questions.push(callback);
         },
         close: function() {}
@@ -35,7 +37,7 @@ function withStubbedMenu(run) {
     try {
         run(freshMenu(), rl, questions, function() {
             return writes;
-        });
+        }, prompts);
     } finally {
         readline.createInterface = originalCreateInterface;
         console.log = originalLog;
@@ -69,7 +71,8 @@ withStubbedMenu(function(menu, rl, questions) {
 });
 
 // Continue input must sync history and tolerate a callback that resets the menu.
-withStubbedMenu(function(menu, rl, questions) {
+// Continue wait must not show the >> command prompt.
+withStubbedMenu(function(menu, rl, questions, getWrites, prompts) {
     menu.disableDefaultHeader().disableDefaultPrompt();
     menu.consoleOutput = function() {};
     menu.addItem('Run', function() {});
@@ -77,7 +80,9 @@ withStubbedMenu(function(menu, rl, questions) {
         menu.resetMenu();
     });
     menu.start();
+    assert.strictEqual(prompts[0], '>> ');
     questions[0]('1');
+    assert.strictEqual(prompts[1], '');
     rl.history = ['', '1'];
     assert.doesNotThrow(function() {
         questions[1]('');
