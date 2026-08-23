@@ -9,6 +9,34 @@ Create interactive console menus for REPL-style and ops Node.js apps. Register m
 npm install node-menu
 ```
 
+## TypeScript / ES module imports
+
+`node-menu` is a CommonJS package that exports a **singleton** menu instance (not a class). Bundled typings use `export =`.
+
+With `esModuleInterop: true` (default in many modern `tsconfig`s):
+
+```typescript
+import menu from 'node-menu';
+
+menu
+    .addItem('Ping', () => console.log('pong'))
+    .start();
+```
+
+Without `esModuleInterop`:
+
+```typescript
+import menu = require('node-menu');
+```
+
+In plain ESM (Node with `"type": "module"`), the same default import works via Node’s CJS interop:
+
+```javascript
+import menu from 'node-menu';
+```
+
+Do **not** call `new` on the import — the module already exports a ready-to-use instance. Use `node-menu@1.3.7` or later for typings that match this singleton export.
+
 ## Quickstart — Background jobs console
 
 Run the full example:
