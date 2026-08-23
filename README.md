@@ -143,7 +143,7 @@ Invoke an item with no arguments by typing its number. For arguments, type the n
 
 ### AI gateway / RAG ops console
 
-Simulated internal ops console for a Node AI gateway (traffic, RAG indexes, rate/cost caps) — not a model CLI like Ollama.
+Simulated internal ops console for a Node AI gateway (traffic, RAG indexes, rate/cost caps).
 
 ```bash
 node examples/ai-gateway-ops.js
