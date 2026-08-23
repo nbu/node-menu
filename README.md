@@ -139,6 +139,52 @@ Invoke an item with no arguments by typing its number. For arguments, type the n
 | `examples/custom-chrome.js` | `customHeader` and `customPrompt` |
 | `examples/cancel-job.js` | Long-running work cancelled via `continueCallback` when Enter is pressed |
 | `examples/history-persist.js` | Optional command history persistence (`configureHistory`) |
+| `examples/ai-gateway-ops.js` | AI gateway / RAG ops: traffic, indexes, caps; custom chrome, cancel-in-flight, history persist |
+
+### AI gateway / RAG ops console
+
+Simulated internal ops console for a Node AI gateway (traffic, RAG indexes, rate/cost caps).
+
+```bash
+node examples/ai-gateway-ops.js
+```
+
+Sample session (abridged):
+
+```text
+=== AI Gateway Ops ===
+open=1  maxRpm=60  budget=100000  used=12500
+History: /tmp/node-menu-ai-gateway-history
+
+----------------Traffic----------------
+1. List requests
+2. Get request by id: "id"
+3. Kill request: "id"
+------------------RAG------------------
+4. List indexes
+5. Reindex: "name"
+6. Flush cache
+7. Query index: "name" "query"
+----------------Limits-----------------
+8. Show caps
+9. Set max RPM: "maxRpm"
+10. Set daily token budget: "dailyTokenBudget"
+----------------System-----------------
+11. Stats
+12. Quit
+gateway> 
+>> 3 1
+Killed request #1
+Press Enter to continue...
+
+>> 7 docs "rate limits"
+Query "rate limits" on index "docs":
+  1. [0.92] Matching chunk about: rate limits
+  2. [0.81] Related note in docs
+Press Enter to continue...
+```
+
+Full script: `examples/ai-gateway-ops.js`.
 
 ## Methods
 
